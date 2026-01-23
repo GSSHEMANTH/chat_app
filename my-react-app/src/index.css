@@ -1,0 +1,23 @@
+body {
+    background-color: #a3e0ff;
+    margin: 0;
+    padding: 0;
+}
+.login-container {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-height: 90vh;
+}
+.chat-container {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-height: 90vh;
+}

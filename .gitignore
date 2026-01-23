@@ -1,0 +1,12 @@
+# dependencies
+node_modules/
+
+# production builds
+build/
+dist/
+
+# env
+.env
+
+# zip files
+*.zip
