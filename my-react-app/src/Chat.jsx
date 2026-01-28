@@ -43,14 +43,15 @@ const Chat = () => {
     setMessage("");
   };
 
-  return (
-    <div style={{ padding: 20 }}>
-      <h2>Welcome {name}</h2>
+return (
+  <div className="chat-page">
+    <div className="chat-box">
+      <h3>WELCOME {name}</h3>
 
-      <div style={{ border: "1px solid #ccc", height: 300, overflowY: "auto" }}>
-        {messages.map((msg, i) => (
-          <p key={i}>
-            <b>{msg.user}:</b> {msg.text}
+      <div className="messages">
+        {messages.map((msg, index) => (
+          <p key={index}>
+            <strong>{msg.user}:</strong> {msg.text}
           </p>
         ))}
       </div>
@@ -62,7 +63,8 @@ const Chat = () => {
       />
       <button onClick={sendMessage}>Send</button>
     </div>
-  );
+  </div>
+);
 };
 
 export default Chat;

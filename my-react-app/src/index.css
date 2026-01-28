@@ -21,3 +21,28 @@ body {
     padding: 20px;
     min-height: 90vh;
 }
+.chat-page {
+  display: flex;
+  justify-content: center;   /* horizontal center */
+  align-items: center;       /* vertical center */
+  height: 100vh;             /* full screen height */
+  background:#a3e0ff;
+}
+
+.chat-box {
+  width: 400px;
+  height: 500px;
+  background: #f2f4f7;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+}
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  border: 1px solid #0a0a0a;
+  padding: 8px;
+}
