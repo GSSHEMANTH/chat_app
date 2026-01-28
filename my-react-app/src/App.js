@@ -4,11 +4,10 @@ import Chat from "./Chat";
 
 function App() {
   return (
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/chat" element={<Chat />} />
-      </Routes>
-
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/chat" element={<Chat />} />
+    </Routes>
   );
 }
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const socket = io("http://https://chat-app-v6wh.onrender.com");
+const socket = io("https://chat-app-v6wh.onrender.com");
 
 const Chat = () => {
   const location = useLocation();
@@ -12,6 +12,8 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
+    if (!name) return;
+
     socket.emit("join", name);
 
     socket.on("receive_message", (data) => {
@@ -31,33 +33,24 @@ const Chat = () => {
   }, [name]);
 
   const sendMessage = () => {
-    if (message.trim() === "") return;
+    if (!message.trim()) return;
 
-    const data = {
+    socket.emit("send_message", {
       user: name,
       text: message
-    };
+    });
 
-    socket.emit("send_message", data);
     setMessage("");
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>WELCOME {name}</h2>
+    <div style={{ padding: 20 }}>
+      <h2>Welcome {name}</h2>
 
-      <div
-        style={{
-          border: "1px solid #ccc",
-          height: "300px",
-          overflowY: "auto",
-          padding: "10px",
-          marginBottom: "10px"
-        }}
-      >
-        {messages.map((msg, index) => (
-          <p key={index}>
-            <strong>{msg.user}:</strong> {msg.text}
+      <div style={{ border: "1px solid #ccc", height: 300, overflowY: "auto" }}>
+        {messages.map((msg, i) => (
+          <p key={i}>
+            <b>{msg.user}:</b> {msg.text}
           </p>
         ))}
       </div>
