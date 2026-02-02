@@ -53,7 +53,7 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
-      <h2 className="chat-title">💬 Chat App - {name}</h2>
+      <h1 className="chat-title">WELCOME TO THE CHAT {name}</h1>
 
       <div className="chat-box">
         {messages.map((msg, index) => {
