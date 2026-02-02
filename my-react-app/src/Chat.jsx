@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
 
@@ -6,14 +6,13 @@ const socket = io("https://chat-app-v6wh.onrender.com");
 
 const Chat = () => {
   const location = useLocation();
-  const name = location.state?.name;
+  const name = location.state?.name || "Guest";
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const chatEndRef = useRef(null);
 
   useEffect(() => {
-    if (!name) return;
-
     socket.emit("join", name);
 
     socket.on("receive_message", (data) => {
@@ -27,44 +26,67 @@ const Chat = () => {
       ]);
     });
 
-    return () => {
-      socket.off();
-    };
+    return () => socket.off();
   }, [name]);
 
-  const sendMessage = () => {
-    if (!message.trim()) return;
+  // auto scroll to bottom
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
-    socket.emit("send_message", {
+  const sendMessage = () => {
+    if (message.trim() === "") return;
+
+    const data = {
       user: name,
       text: message
-    });
+    };
 
+    socket.emit("send_message", data);
     setMessage("");
   };
 
-return (
-  <div className="chat-page">
-    <div className="chat-box">
-      <h3>WELCOME {name}</h3>
+  // Enter key send
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") sendMessage();
+  };
 
-      <div className="messages">
-        {messages.map((msg, index) => (
-          <p key={index}>
-            <strong>{msg.user}:</strong> {msg.text}
-          </p>
-        ))}
+  return (
+    <div className="chat-container">
+      <h2 className="chat-title">💬 Chat App - {name}</h2>
+
+      <div className="chat-box">
+        {messages.map((msg, index) => {
+          let className = "chat-message";
+
+          if (msg.user === "System") className += " system";
+          else if (msg.user === name) className += " me";
+          else className += " other";
+
+          return (
+            <div key={index} className={className}>
+              <span className="chat-user">{msg.user}</span>
+              <span className="chat-text">{msg.text}</span>
+            </div>
+          );
+        })}
+        <div ref={chatEndRef}></div>
       </div>
 
-      <input
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type message"
-      />
-      <button onClick={sendMessage}>Send</button>
+      <div className="chat-input-box">
+        <input
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyPress}
+          placeholder="Type message..."
+          className="chat-input"
+        />
+        <button onClick={sendMessage} className="chat-btn">
+          ➤
+        </button>
+      </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default Chat;

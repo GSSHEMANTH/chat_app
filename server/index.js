@@ -15,24 +15,34 @@ const io = new Server(server, {
   }
 });
 
+let users = {}; // store connected users
+
 io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  // when user joins
   socket.on("join", (name) => {
-    socket.username = name;
-    socket.broadcast.emit("user_joined", name);
+    users[socket.id] = name;
+
+    // send updated users list
+    io.emit("online_users", Object.values(users));
   });
 
+  // receive message
   socket.on("send_message", (data) => {
     io.emit("receive_message", data);
   });
 
+  // when user disconnects
   socket.on("disconnect", () => {
-    if (socket.username) {
-      socket.broadcast.emit("user_left", socket.username);
-    }
+    const leftUser = users[socket.id];
+    delete users[socket.id];
+
+    io.emit("online_users", Object.values(users));
+    io.emit("user_left", leftUser);
   });
 });
 
-const PORT = process.env.PORT || 5001;
-server.listen(PORT, () => {
-  console.log("Server running on port", PORT);
+server.listen(5001, () => {
+  console.log("Server running on port 5001");
 });
